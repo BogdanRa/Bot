@@ -1,26 +1,31 @@
 import sqlite3
 
-#conn = sqlite3.connect(":memory:")
-conn = sqlite3.connect("mydatabase.db")
+conn = sqlite3.connect("mydatabase.db", check_same_thread = False)
 cursor = conn.cursor()
+#cursor.execute("CREATE TABLE LINK ('user_id' int, 'links' text)")
 
 
-#cursor.execute("""CREATE TABLE saved_links
-#                 (user_id, links, category_id)
-#               """)
 
 
-def appendlinks(message_id, link, category):
-    data = [(message_id, link, category)]
+def appendlinks(message_id, link):
+    data = [(message_id, str(link))]
 
-    cursor.executemany("INSERT INTO saved_links VALUES (?,?,?)", data)
+    cursor.executemany("INSERT INTO LINK VALUES (?, ?)", data)
     conn.commit()
 
-    sql = "SELECT * FROM saved_links"
-    cursor.execute(sql)
-    print (cursor.fetchall())
+    #excute
+    #sql = "SELECT * FROM saved_links"
+    #cursor.execute(sql)
+    #print (cursor.fetchall())
 
-#appendlinks(2, 'http://prnhub.com', 'xss')
+def execute(message_id):
 
-for row in cursor.execute("SELECT * FROM saved_links"):
-   print(row)
+    sql = "SELECT * FROM LINK where user_id=?"
+    cursor.execute(sql, [(message_id)])
+    for i, value in cursor.fetchall():
+        return value
+
+#sql = "SELECT * FROM LINK where user_id=?"
+#cursor.execute(sql, [(148927934)])
+#for i, valu in cursor.fetchall():
+#    print valu
