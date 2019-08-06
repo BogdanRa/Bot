@@ -6,8 +6,10 @@ bot = telebot.TeleBot('916963407:AAFWeXoD5jfDeselQXaB7fvFs9kNs7HfY1w')
 
 
 keyboard1 = telebot.types.ReplyKeyboardMarkup()
-keyboard1.row('links')
-
+keyboard1.row('habr')
+keyboard1.row('xakep')
+keyboard1.row('tproger')
+keyboard1.row('others')
 
 
 @bot.message_handler(commands=['start'])
@@ -16,18 +18,25 @@ def start_message(message):
 
 
 @bot.message_handler(content_types=['text'])
-def return_links(message):
+def append_links(message):
     if parse_url(message.text):
 
-        appendlinks(message.chat.id, message.text)
+        appendlinks(message.chat.id, message.text, parse_domain(message.text))
+        #add to SQLlight
 
-    if message.text == "links":
+
+    key_words = ['habr', 'xakep', 'tproger']
+    print(message.text)
+    if message.text in key_words:
         BD = []
 
-        for i in execute(message.chat.id):
+        for i in execute(message.chat.id, message.text):
+
             BD.append(i)
         bot.send_message(message.chat.id, '\n'.join(BD)+'\n')
 
+    else:
+        pass
 
 
 

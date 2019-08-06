@@ -2,30 +2,34 @@ import sqlite3
 
 conn = sqlite3.connect("mydatabase.db", check_same_thread = False)
 cursor = conn.cursor()
-#cursor.execute("CREATE TABLE LINK ('user_id' int, 'links' text)")
+#cursor.execute("CREATE TABLE data ('user_id' int, 'links' text, 'category' text)")
+#conn.commit()
 
 
 
+def appendlinks(message_id, link, domain):
+    data = [(message_id, str(link), domain)]
 
-def appendlinks(message_id, link):
-    data = [(message_id, str(link))]
     cursor = conn.cursor()
-    cursor.executemany("INSERT INTO LINK VALUES (?, ?)", data)
+    cursor.executemany("INSERT INTO data VALUES (?, ?, ?)", data)
     conn.commit()
 
 
-def execute(user_id):
+def execute(user_id, category):
     links = []
     cursor = conn.cursor()
-    sql = "SELECT * FROM LINK where user_id=?"
-    cursor.execute(sql, [(user_id)])
-    for i, value in cursor.fetchall():
-        links.append(value)
+    sql = "SELECT * FROM data where user_id=? and category LIKE ?"
+    cursor.execute(sql, [(user_id), ('%'+category+'%')])
+    for value in cursor.fetchall():
+        links.append(value[1])
     return links
 
 
 
-sql = "select * FROM LINK where user_id=?"
-cursor.execute(sql, [(148927934)])
+
+#sql = "select * FROM data where user_id=? and category like ?"
+#cursor.execute(sql, [(148927934), ('%'+'habr'+'%')])
+#for value in cursor.fetchall():
+#    print value[1]
 #conn.commit()
-print cursor.fetchall()
+#print cursor.fetchall()
