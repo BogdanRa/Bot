@@ -9,23 +9,23 @@ cursor = conn.cursor()
 
 def appendlinks(message_id, link):
     data = [(message_id, str(link))]
-
+    cursor = conn.cursor()
     cursor.executemany("INSERT INTO LINK VALUES (?, ?)", data)
     conn.commit()
 
-    #excute
-    #sql = "SELECT * FROM saved_links"
-    #cursor.execute(sql)
-    #print (cursor.fetchall())
 
-def execute(message_id):
-
+def execute(user_id):
+    links = []
+    cursor = conn.cursor()
     sql = "SELECT * FROM LINK where user_id=?"
-    cursor.execute(sql, [(message_id)])
+    cursor.execute(sql, [(user_id)])
     for i, value in cursor.fetchall():
-        return value
+        links.append(value)
+    return links
 
-#sql = "SELECT * FROM LINK where user_id=?"
-#cursor.execute(sql, [(148927934)])
-#for i, valu in cursor.fetchall():
-#    print valu
+
+
+sql = "select * FROM LINK where user_id=?"
+cursor.execute(sql, [(148927934)])
+#conn.commit()
+print cursor.fetchall()
