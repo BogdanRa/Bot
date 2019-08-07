@@ -1,6 +1,7 @@
 import telebot
 from sqllite import *
-from urlpars import parse_url
+from urlpars import parse_url, parse_domain
+import time
 
 bot = telebot.TeleBot('916963407:AAFWeXoD5jfDeselQXaB7fvFs9kNs7HfY1w')
 
@@ -14,7 +15,7 @@ keyboard1.row('others')
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    bot.send_message(message.chat.id, 'Hey you pull me /start', reply_markup=keyboard1)
+    bot.send_message(message.chat.id, 'Send your favorites link here and put /start', reply_markup=keyboard1)
 
 
 @bot.message_handler(content_types=['text'])
@@ -22,18 +23,23 @@ def append_links(message):
     if parse_url(message.text):
 
         appendlinks(message.chat.id, message.text, parse_domain(message.text))
+        bot.send_message(message.chat.id, "The link has added")
+
         #add to SQLlight
 
-
+    #select links from sql
     key_words = ['habr', 'xakep', 'tproger']
-    print(message.text)
+
     if message.text in key_words:
-        BD = []
 
-        for i in execute(message.chat.id, message.text):
+        for data_links in execute(message.chat.id, message.text):
+            bot.send_message(message.chat.id, data_links)
+            time.sleep(0.5)
 
-            BD.append(i)
-        bot.send_message(message.chat.id, '\n'.join(BD)+'\n')
+    elif message.text == 'others':
+        for data_links in other_excute(message.chat.id):
+            bot.send_message(message.chat.id, data_links)
+            time.sleep(0.5)
 
     else:
         pass
