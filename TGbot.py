@@ -3,7 +3,7 @@ from sqllite import *
 from urlpars import parse_url, parse_domain
 import time
 
-bot = telebot.TeleBot('916963407:AAFWeXoD5jfDeselQXaB7fvFs9kNs7HfY1w')
+bot = telebot.TeleBot()
 
 
 keyboard1 = telebot.types.ReplyKeyboardMarkup()
